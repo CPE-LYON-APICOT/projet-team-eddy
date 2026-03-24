@@ -1,9 +1,7 @@
 ---
 binome:
-  - nom: "Nom1"
-    prenom: "Prénom1"
-  - nom: "Nom2"
-    prenom: "Prénom2"
+  - nom: "Graradji"
+    prenom: "Eddy"
 ---
 
 # Projet POO — 3ICS
