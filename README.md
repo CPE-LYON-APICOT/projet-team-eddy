@@ -5,7 +5,7 @@ binome:
 ---
 
 # Projet POO — 3ICS
-\<Remplacez par le nom de votre projet\>
+Black Holed
  
 A la toute fin, brièvement, décrivez le ici, comme si c'était la page de présentation sur un store d'applications. 
 
