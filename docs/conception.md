@@ -46,37 +46,130 @@ Intégration : Le système utilise des classes de fabrication dédiées, telles 
 
 <!-- Exemple de syntaxe PlantUML (à remplacer par votre diagramme) :
 
-```plantuml
-@startuml
-interface Drawable {
-    + draw(gc : GraphicsContext) : void
-}
-
-abstract class Entity {
-    - x : double
-    - y : double
-    + getX() : double
-    + getY() : double
-    + update() : void
-}
-
-Entity ..|> Drawable
-
-class Player extends Entity {
-    - speed : double
-    + move(direction : Direction) : void
-}
-
-class Obstacle extends Entity {
-    - damage : int
-}
-@enduml
 ```
-
-Ceci est un exemple, remplacez-le par votre propre diagramme. -->
-
-```plantuml
 @startuml
+skinparam classAttributeIconSize 0
+
+class RunManager <<Singleton>> {
+    - instance : RunManager
+    - currentStrate : Strate
+    + getInstance() : RunManager
+    + lancerPartie() : void
+}
+
+interface DeathObserver {
+    + notifyDeath() : void
+}
+
+interface Interactable {
+    + interagir(j : Joueur) : void
+}
+
+abstract class Entite {
+    # hp : int
+    # hpMax : int
+    # x : float
+    # y : float
+    + recevoirDegats(montant : int) : void
+    + seDeplacer(dx : float, dy : float) : void
+    + {abstract} mourir() : void
+}
+
+class Monstre extends Entite {
+    - degatsBase : int
+    + traquer(cible : Joueur) : void
+    + attaquer(cible : Joueur) : void
+    + mourir() : void
+}
+
+class Joueur extends Entite {
+    - poussiereEtoile : int
+    + ramasser(item : Equipement) : void
+    + interagir(cible : Interactable) : void
+    + mourir() : void
+}
+
+class Boss extends Monstre {
+    - phaseActuelle : int
+    + changerPhase() : void
+}
+
+class Projectile {
+    - x : float
+    - y : float
+    - dx : float
+    - dy : float
+    - degats : int
+    - tireur : Entite
+    + update() : void
+    + verifierCollision() : boolean
+}
+
+class Coffre implements Interactable {
+    - estOuvert : boolean
+    + interagir(j : Joueur) : void
+}
+
+class Porte implements Interactable {
+    - estOuverte : boolean
+    + interagir(j : Joueur) : void
+}
+
+abstract class Equipement {
+    # nom : String
+}
+
+class Armure extends Equipement {
+    - defense : int
+}
+
+class Arme extends Equipement {
+    - degats : int
+    + tirer(x : float, y : float, dirX : float, dirY : float) : Projectile
+}
+
+class WeaponFactory <<Factory>> {
+    + createWeaponForMilestone(milestone : int) : Arme
+}
+
+interface Effet {
+    + appliquer(cible : Entite) : void
+}
+
+class Strate {
+    - largeur : int
+    - hauteur : int
+    + genererNiveau() : void
+    + estPraticable(x : float, y : float) : boolean
+}
+
+class Tuile {
+    - decouverte : boolean
+}
+
+enum TypeTuile {
+    MUR
+    SOL
+    VIDE
+}
+
+Joueur "1" o--> "1" Arme
+Joueur "1" o--> "1" Armure
+Joueur "1" o--> "*" DeathObserver
+Arme "1" o--> "0..1" Effet
+Entite "1" o--> "*" Effet
+Coffre "1" *--> "1" Equipement
+
+Strate "1" *--> "*" Tuile
+Tuile "1" --> "1" TypeTuile
+Strate "1" o--> "*" Entite
+Strate "1" o--> "*" Interactable
+Strate "1" o--> "*" Projectile
+
+RunManager "1" o--> "1" Strate
+RunManager "1" --> "1" WeaponFactory
+WeaponFactory ..> Arme
+Arme ..> Projectile 
 
 @enduml
 ```
