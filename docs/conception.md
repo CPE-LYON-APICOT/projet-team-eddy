@@ -24,11 +24,11 @@ Justification : Lorsque les points de vie de l'Anomalie tombent à zéro, un év
 
 Intégration : La classe gérant l'Anomalie maintient une liste d'observateurs implémentant l'interface DeathObserver. Des composants indépendants comme MenuUI, AudioService et LevelGenerator s'y abonnent. Dès que la condition de mort (HP <= 0) est vérifiée, une méthode notifyDeath() est appelée pour boucler sur les observateurs et déclencher leurs processus respectifs de manière autonome.
 
-DP 3 — Strategy
+DP 3 — Décorateur
 
 Feature associée : Gestion dynamique des altérations d'état (Poison, Brûlure, Étourdissement).
 
-Justification : Le système de combat inclut plusieurs altérations d'état applicables tant aux monstres qu'au joueur. Gérer ces effets via une structure conditionnelle complexe (if/else ou switch) au sein de la méthode update() des entités rendrait l'ajout de nouveaux effets lourd et sujet aux régressions (violation du principe Ouvert/Fermé). Le pattern Strategy permet d'encapsuler chaque altération dans un comportement indépendant, interchangeable, pouvant être attaché ou détaché d'une entité à la volée.
+Justification : Le système de combat inclut plusieurs altérations d'état applicables tant aux monstres qu'au joueur. Gérer ces effets via une structure conditionnelle complexe (if/else ou switch) au sein de la méthode update() des entités rendrait l'ajout de nouveaux effets lourd et sujet aux régressions (violation du principe Ouvert/Fermé). Le pattern Décorateur permet d'encapsuler chaque altération dans un comportement indépendant, interchangeable, pouvant être attaché ou détaché d'une entité à la volée.
 
 Intégration : L'architecture définit une interface StatusEffectStrategy possédant une méthode applyEffect(Entity target). Chaque effet est isolé dans sa propre classe (PoisonEffect, BurnEffect, StunEffect). Ainsi, lorsqu'un équipement applique un effet spécifique (ex: brûlure), le système injecte simplement l'instance de BurnEffect dans la liste des stratégies actives de la cible.
 
@@ -44,9 +44,7 @@ Intégration : Le système utilise des classes de fabrication dédiées, telles 
 
 ### Diagramme 1 — *Type (classe, séquence, cas d'utilisation…)*
 
-<!-- Exemple de syntaxe PlantUML (à remplacer par votre diagramme) :
-
-```
+```plantuml
 @startuml
 skinparam classAttributeIconSize 0
 
