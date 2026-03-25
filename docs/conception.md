@@ -53,6 +53,7 @@ class RunManager <<Singleton>> {
     - currentStrate : Strate
     + getInstance() : RunManager
     + lancerPartie() : void
+    + update(deltaTime : float) : void
 }
 
 interface DeathObserver {
@@ -60,7 +61,7 @@ interface DeathObserver {
 }
 
 interface Interactable {
-    + interagir(j : Joueur) : void
+    + interagir(e : Entite) : void
 }
 
 abstract class Entite {
@@ -71,12 +72,29 @@ abstract class Entite {
     + recevoirDegats(montant : int) : void
     + seDeplacer(dx : float, dy : float) : void
     + {abstract} mourir() : void
+    + addObserver(obs : DeathObserver) : void
+    + removeObserver(obs : DeathObserver) : void
+    # notifyObservers() : void
+    + update(deltaTime : float) : void
+}
+
+abstract class EffectDecorator extends Entite {
+    # wrappee : Entite
+    + EffectDecorator(e : Entite)
+    + recevoirDegats(montant : int) : void
+    + seDeplacer(dx : float, dy : float) : void
+    + mourir() : void
+}
+
+class PoisonDecorator extends EffectDecorator {
+    - degatsParTick : int
+    + appliquerPoison() : void
 }
 
 class Monstre extends Entite {
     - degatsBase : int
-    + traquer(cible : Joueur) : void
-    + attaquer(cible : Joueur) : void
+    + traquer(cible : Entite) : void
+    + attaquer(cible : Entite) : void
     + mourir() : void
 }
 
@@ -100,17 +118,17 @@ class Projectile {
     - degats : int
     - tireur : Entite
     + update() : void
-    + verifierCollision() : boolean
+    + verifierCollision(cible : Entite) : boolean
 }
 
 class Coffre implements Interactable {
     - estOuvert : boolean
-    + interagir(j : Joueur) : void
+    + interagir(e : Entite) : void
 }
 
 class Porte implements Interactable {
     - estOuverte : boolean
-    + interagir(j : Joueur) : void
+    + interagir(e : Entite) : void
 }
 
 abstract class Equipement {
@@ -130,18 +148,17 @@ class WeaponFactory <<Factory>> {
     + createWeaponForMilestone(milestone : int) : Arme
 }
 
-interface Effet {
-    + appliquer(cible : Entite) : void
-}
-
 class Strate {
     - largeur : int
     - hauteur : int
     + genererNiveau() : void
     + estPraticable(x : float, y : float) : boolean
+    + update(deltaTime : float) : void
 }
 
 class Tuile {
+    - x : int
+    - y : int
     - decouverte : boolean
 }
 
@@ -151,11 +168,38 @@ enum TypeTuile {
     VIDE
 }
 
+class InputManager {
+    + getDirectionX() : float
+    + getDirectionY() : float
+    + isActionPressed() : boolean
+}
+
+class UIManager {
+    + updateHP(hp : int, maxHp : int) : void
+    + afficherGameOver() : void
+    + notifyDeath() : void
+}
+
+class SaveManager {
+    - totalPoussiere : int
+    + sauvegarderProgression() : void
+    + chargerProgression() : void
+}
+
+class EnemyFactory <<Factory>> {
+    + creerMonstreBasique(x : float, y : float) : Monstre
+    + creerBoss(milestone : int) : Boss
+}
+
+class AudioManager {
+    + jouerSon(nom : String) : void
+    + notifyDeath() : void
+}
+
 Joueur "1" o--> "1" Arme
 Joueur "1" o--> "1" Armure
-Joueur "1" o--> "*" DeathObserver
-Arme "1" o--> "0..1" Effet
-Entite "1" o--> "*" Effet
+Entite "1" o--> "*" DeathObserver
+EffectDecorator "1" o--> "1" Entite
 Coffre "1" *--> "1" Equipement
 
 Strate "1" *--> "*" Tuile
@@ -168,6 +212,16 @@ RunManager "1" o--> "1" Strate
 RunManager "1" --> "1" WeaponFactory
 WeaponFactory ..> Arme
 Arme ..> Projectile 
+
+UIManager ..|> DeathObserver
+AudioManager ..|> DeathObserver
+
+Strate "1" --> "1" EnemyFactory
+EnemyFactory ..> Monstre
+
+RunManager "1" --> "1" SaveManager
+
+Joueur ..> InputManager
 
 @enduml
 ```
