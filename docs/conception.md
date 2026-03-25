@@ -42,7 +42,7 @@ Intégration : Le système utilise des classes de fabrication dédiées, telles 
 
 ## Diagrammes UML
 
-### Diagramme 1 — *Type (classe, séquence, cas d'utilisation…)*
+### Diagramme 1 — *Classe*
 
 ```plantuml
 @startuml
