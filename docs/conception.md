@@ -231,6 +231,50 @@ Joueur ..> InputManager
 ```plantuml
 @startuml
 
+actor "Joueur (Humain)" as H
+participant GameManager as GM
+participant SaveManager as SM
+participant UIManager as UI
+participant RunManager as RM
+participant Strate as S
+participant "Joueur (Entite)" as J
+
+H -> GM : lancerApplication()
+activate GM
+GM -> SM : chargerProgression()
+GM -> UI : afficherMenuPrincipal()
+
+H -> UI : cliquerSurJouer()
+UI -> GM : lancerRun()
+
+GM -> RM ** : new RunManager()
+activate RM
+RM -> S ** : new Strate()
+RM -> S : genererNiveau()
+RM -> J ** : instancierJoueur()
+
+loop Chaque Frame (State == RUN)
+    GM -> RM : update(deltaTime)
+    RM -> S : update(deltaTime)
+    S -> J : update(deltaTime)
+    H -> J : inputs clavier
+end
+
+J -> J : recevoirDegats(fatal)
+J -> J : mourir()
+
+J -> UI : notifyDeath()
+UI -> UI : afficherGameOver()
+
+J -> SM : notifyDeath()
+SM -> SM : sauvegarderProgression()
+
+GM -> RM : detruireSession()
+destroy RM
+
+GM -> UI : afficherMenuPrincipal()
+
+
 @enduml
 ```
 
