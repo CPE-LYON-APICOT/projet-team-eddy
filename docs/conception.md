@@ -28,9 +28,9 @@ DP 3 — Décorateur
 
 Feature associée : Gestion dynamique des altérations d'état (Poison, Brûlure, Étourdissement).
 
-Justification : Le système de combat inclut plusieurs altérations d'état applicables tant aux monstres qu'au joueur. Gérer ces effets via une structure conditionnelle complexe (if/else ou switch) au sein de la méthode update() des entités rendrait l'ajout de nouveaux effets lourd et sujet aux régressions (violation du principe Ouvert/Fermé). Le pattern Décorateur permet d'encapsuler chaque altération dans un comportement indépendant, interchangeable, pouvant être attaché ou détaché d'une entité à la volée.
+Justification : Le système de combat inclut plusieurs altérations d'état applicables tant aux monstres qu'au joueur. Gérer ces effets via une structure conditionnelle complexe (if/else ou switch) au sein de la méthode update() des entités rendrait l'ajout de nouveaux effets lourd et sujet aux régressions (violation du principe Ouvert/Fermé). Le pattern Décorateur permet d'envelopper dynamiquement les entités avec ces altérations pour cumuler les comportements.
 
-Intégration : L'architecture définit une interface StatusEffectStrategy possédant une méthode applyEffect(Entity target). Chaque effet est isolé dans sa propre classe (PoisonEffect, BurnEffect, StunEffect). Ainsi, lorsqu'un équipement applique un effet spécifique (ex: brûlure), le système injecte simplement l'instance de BurnEffect dans la liste des stratégies actives de la cible.
+Intégration : L'architecture définit une interface commune IEntity (ou une classe abstraite de base) pour les combattants. Chaque altération d'état est modélisée par une classe décoratrice (PoisonDecorator, BurnDecorator) qui implémente IEntity et encapsule une référence vers l'entité qu'elle décore. Lorsqu'un équipement applique une brûlure, le système "enveloppe" l'entité cible avec une instance de BurnDecorator (target = new BurnDecorator(target)). Lors de la boucle de jeu, les appels aux méthodes de l'entité traversent séquentiellement chaque couche de décoration, appliquant les effets (dégâts, ralentissement) avant de relayer l'appel à l'entité de base encapsulée.
 
 DP 4 — Factory
 
