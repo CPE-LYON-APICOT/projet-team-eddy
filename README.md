@@ -7,7 +7,7 @@ binome:
 # Projet POO — 3ICS
 Black Holed
  
-A la toute fin, brièvement, décrivez le ici, comme si c'était la page de présentation sur un store d'applications. 
+Plongez dans un RogueLite d'action nerveux où la mort fait partie de l'équation. Incarnez une "Anomalie" née de la singularité et remontez à la source du chaos cosmique. Chaque "Strate" que vous traversez est un fragment de monde disloqué et recraché par un trou noir supermassif, offrant un défi mortel et imprévisible à chaque nouvelle tentative.
 
 
 
