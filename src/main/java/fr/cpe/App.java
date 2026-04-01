@@ -18,6 +18,7 @@ package fr.cpe;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import fr.cpe.engine.GameEngine;
 import fr.cpe.engine.InputService;
 import javafx.application.Application;
@@ -71,7 +72,7 @@ public class App extends Application {
         scene.setOnKeyPressed(e -> inputService.handleKeyPressed(e.getCode()));
         scene.setOnKeyReleased(e -> inputService.handleKeyReleased(e.getCode()));
 
-        stage.setTitle("Projet POO");
+        stage.setTitle("Black Holed");
         stage.setScene(scene);
         stage.show();
 
