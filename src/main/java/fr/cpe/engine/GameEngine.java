@@ -15,6 +15,7 @@ package fr.cpe.engine;
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
 import com.google.inject.Inject;
+
 import fr.cpe.service.GameService;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
@@ -59,7 +60,7 @@ public class GameEngine {
             public void handle(long now) {
                 double w = gamePane.getWidth();
                 double h = gamePane.getHeight();
-                gameService.update(w, h);
+                gameService.update(w, h, now);
             }
         };
         gameLoop.start();
