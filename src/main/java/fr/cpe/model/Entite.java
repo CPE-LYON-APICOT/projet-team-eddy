@@ -24,6 +24,10 @@ abstract class Entite {
         return this.hp;
     }
 
+    public int getHpMax() {
+        return hpMax;
+    }
+
     public double getX() {
         return x;
     }
@@ -53,5 +57,17 @@ abstract class Entite {
         System.out.println("L'entité est morte !");
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
 
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    
 }

@@ -6,18 +6,17 @@ public class Monstre  extends Entite {
     }
 
     public void traquer(Joueur joueur, long tempsActuel) {
-        double dx = joueur.x - this.x;
-        double dy = joueur.y - this.y;
-        double distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance > 0) {
-            double moveX = (dx / distance) * this.speed;
-            double moveY = (dy / distance) * this.speed;
-            this.seDeplacer(moveX, moveY);
+        double dx = joueur.getX() - this.getX();
+        double dy = joueur.getY() - this.getY();
+        
+        double norme = Math.sqrt(dx * dx + dy * dy);
+        
+        if (norme > 0) {
+            dx /= norme;
+            dy /= norme;
         }
-        if (distance < 30 && (tempsActuel - this.dernierCoupPorte) > 1000000000) { // Attaque si proche et cooldown écoulé
-            this.dernierCoupPorte = tempsActuel;
-            joueur.recevoirDegats(this.degats);
-        }
+        
+        this.setX(this.getX() + dx * this.speed);
+        this.setY(this.getY() + dy * this.speed);
     }
 }
